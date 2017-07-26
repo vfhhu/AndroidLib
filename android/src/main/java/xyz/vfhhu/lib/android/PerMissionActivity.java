@@ -138,14 +138,17 @@ public class PerMissionActivity extends AppCompatActivity {
         return true;
     }
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,int[] grantResults) {
         if (requestCode == REQUEST_PERMISSION_CODE){
             boolean isAllReq=true;
-            for(int grantResult : grantResults){
-                if (grantResult!= PackageManager.PERMISSION_GRANTED) {
-                    isAllReq=false;
+            if(grantResults!=null){
+                for(int grantResult : grantResults){
+                    if (grantResult!= PackageManager.PERMISSION_GRANTED) {
+                        isAllReq=false;
+                    }
                 }
             }
+
             if(isAllReq){
                 Intent i=new Intent();
                 i.putExtra(TAG_RESULT_TYPE,VALUE_RESULT_SUCCESS);
