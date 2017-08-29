@@ -19,7 +19,7 @@ public class MLog {
     }
 
     private static String getClassName(Object obj) {
-        return obj.getClass().getSimpleName();
+        return obj.getClass().getPackage().getName()+"."+obj.getClass().getSimpleName();
     }
 
     public static void v(Object obj, String msg) {
