@@ -9,7 +9,7 @@
         <activity android:name=".PerMissionActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppStartLoad" ></activity>
+            android:theme="@style/Theme.AppStartLoadVfhhu" ></activity>
     </application>
 
 </manifest>
