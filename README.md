@@ -1,6 +1,6 @@
 # AndroidLib
 
-dependencies {
-    compile 'xyz.vfhhu.lib:android:4.0'
-}
+dependencies {<br>
+    compile 'xyz.vfhhu.lib:android:4.0'<br>
+}<br>
 
