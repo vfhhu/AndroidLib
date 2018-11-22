@@ -16,11 +16,11 @@ VfhhuLib.setDebug(BuildConfig.DEBUG);//run one time
 ## BaseActivity
 ```java
 public class MainActivity extends BaseActivity{
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		VfhhuLib.setDebug(BuildConfig.DEBUG);//run one time
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        VfhhuLib.setDebug(BuildConfig.DEBUG);//run one time
 
         //Android log show in debug mod
         log("message");
