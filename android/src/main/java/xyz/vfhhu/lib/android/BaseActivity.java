@@ -1,0 +1,172 @@
+package xyz.vfhhu.lib.android;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.orhanobut.logger.Logger;
+
+/**
+ * Created by leo3x on 2018/6/30.
+ */
+
+public abstract class BaseActivity extends Activity {
+    public String TAG;
+    public Context ctx;
+    public Activity act;
+    private boolean active  = false;
+    private ActivityResultCallback onActivityResultCallback;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ctx = act = this;
+        TAG=getClass().getSimpleName();
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(onActivityResultCallback!=null){
+            onActivityResultCallback.onActivityResult(requestCode,resultCode,data);
+        }
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        active =false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        active =true;
+    }
+
+    public void log(String s) {
+        if(VfhhuLib.isDebug()) Log.d(TAG,s);
+    }
+    public void loggger(Object s) {
+        if(VfhhuLib.isDebug()) Logger.d(s);
+    }
+    public void toast(final String s) {
+        if(Looper.myLooper() == Looper.getMainLooper()) {
+            Toast.makeText(ctx,s,Toast.LENGTH_LONG).show();
+        }else{
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(ctx,s,Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    }
+    public void toast(final int s) {
+        toast(this.getResources().getString(s));
+    }
+    public void setTextView(final TextView t,final String s) {
+        if(t==null)return;
+        if(Looper.myLooper() == Looper.getMainLooper()) {
+            t.setText(s);
+        }else{
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setTextView(t, s);
+                }
+            });
+        }
+    }
+    public void setTextView(final TextView t,final int id) {
+        if(t==null)return;
+        setTextView(t, act.getResources().getString(id));
+    }
+    public void showView(final View v) {
+        if(v==null)return;
+        if(Looper.myLooper() == Looper.getMainLooper()) {
+            v.setVisibility(View.VISIBLE);
+        }else{
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showView(v);
+                }
+            });
+        }
+    }
+
+    public void hideView(final View v) {
+        if(v==null)return;
+        if(Looper.myLooper() == Looper.getMainLooper()) {
+            v.setVisibility(View.GONE);
+        }else{
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    hideView(v);
+                }
+            });
+        }
+    }
+    public void showView(final View v,final long showtime) {
+        if(v==null)return;
+        if(Looper.myLooper() == Looper.getMainLooper()) {
+            v.setVisibility(View.VISIBLE);
+            if(showtime>0)
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        hideView(v);
+                    }
+                },showtime);
+        }else{
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showView(v,showtime);
+                }
+            });
+        }
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void startAct(final Intent it){
+        if(it==null)return;
+        if(Looper.myLooper() == Looper.getMainLooper()) {
+            startActivity(it);
+        }else{
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    startAct(it);
+                }
+            });
+        }
+    }
+    public void startActRet(final Intent it,final int code,final ActivityResultCallback callback){
+        if(it==null)return;
+        if(Looper.myLooper() == Looper.getMainLooper()) {
+            onActivityResultCallback=callback;
+            startActivityForResult(it,code);
+        }else{
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    startActRet(it,code,callback);
+                }
+            });
+        }
+    }
+    public interface ActivityResultCallback {
+        void onActivityResult(int requestCode, int resultCode, Intent data);
+    }
+
+
+}
