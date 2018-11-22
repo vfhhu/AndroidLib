@@ -37,8 +37,8 @@ public class MainActivity extends BaseActivity{
              public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
              }
-         });
-	}
+        });
+    }
 }
 ```
 ## FileUtil
