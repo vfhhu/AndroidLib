@@ -43,7 +43,7 @@ public class MainActivity extends BaseActivity{
 ```
 ## FileUtil
 simple way to controll file<br>
-FileUtil will use ctx.getExternalFilesDir creat folder in app package<br>
+FileUtil will use context.getExternalFilesDir creat folder in app package<br>
 and controll file at the same folder
 ```java
 //new
