@@ -21,12 +21,13 @@ public abstract class BaseActivity extends Activity {
     public String TAG;
     public Context ctx;
     public Activity act;
+    public BaseActivity act_base;
     private boolean active  = false;
     private ActivityResultCallback onActivityResultCallback;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ctx = act = this;
+        ctx = act = act_base = this;
         TAG=getClass().getSimpleName();
     }
     @Override
