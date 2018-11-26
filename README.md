@@ -73,20 +73,20 @@ fu.getFile(String filename);
 simple way to controll SharedPreferences<br>
 ### save
 ```java
-VfhhuLib.setSaveString(Context ct, String tag, String data);
-VfhhuLib.setSaveInt(Context ct, String tag, int data);
-VfhhuLib.setSaveLong(Context ct, String tag, long data);
-VfhhuLib.setSaveFloat(Context ct, String tag, float data);
+AppStorage.setSaveString(Context ct, String tag, String data);
+AppStorage.setSaveInt(Context ct, String tag, int data);
+AppStorage.setSaveLong(Context ct, String tag, long data);
+AppStorage.setSaveFloat(Context ct, String tag, float data);
 ```
 ### get
 ```java
-VfhhuLib.getSaveString(Context ct, String tag, String defultV);
-VfhhuLib.getSaveInt(Context ct, String tag, int defultV);
-VfhhuLib.getSaveLong(Context ct, String tag, long defultV);
-VfhhuLib.getSaveFloat(Context ct, String tag, float defultV);
+AppStorage.getSaveString(Context ct, String tag, String defultV);
+AppStorage.getSaveInt(Context ct, String tag, int defultV);
+AppStorage.getSaveLong(Context ct, String tag, long defultV);
+AppStorage.getSaveFloat(Context ct, String tag, float defultV);
 ```
 ### remove
 ```java
-VfhhuLib.remove(Context ct,String tag);
-VfhhuLib.clear(Context ct);
+AppStorage.remove(Context ct,String tag);
+AppStorage.clear(Context ct);
 ```
