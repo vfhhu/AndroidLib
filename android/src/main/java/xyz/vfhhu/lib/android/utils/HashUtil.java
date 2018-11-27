@@ -65,9 +65,12 @@ public class HashUtil {
         return s.replaceAll("[^0-9A-Fa-f]", "");
     }
     public static String getHash(String s){
+        return getSHA(s,"SHA-256");
+    }
+    public static String getSHA(String s,String alg){
         String ret="";
         try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            MessageDigest digest = MessageDigest.getInstance(alg);
             byte[] hash = new byte[0];
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 hash = digest.digest(s.getBytes(StandardCharsets.UTF_8));
