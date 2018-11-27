@@ -14,8 +14,8 @@ import xyz.vfhhu.lib.android.utils.CallBackUtil;
 
 public class OnHttpUtilsSuccess implements Callback {
     BaseActivity act;
-    CallBackUtil callback;
-    public OnHttpUtilsSuccess(BaseActivity act,CallBackUtil callback){
+    CallBackUtil<String> callback;
+    public OnHttpUtilsSuccess(BaseActivity act,CallBackUtil<String> callback){
         this.act=act;
         this.callback=callback;
     }
