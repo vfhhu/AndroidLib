@@ -2,7 +2,7 @@
 
 ```gradle
 dependencies {
-	implementation 'xyz.vfhhu.lib:android:10.2'
+	implementation 'xyz.vfhhu.lib:android:10.3'
 	implementation 'com.squareup.okhttp3:okhttp:3.10.0'
 	implementation 'com.orhanobut:logger:2.2.0'
 }
