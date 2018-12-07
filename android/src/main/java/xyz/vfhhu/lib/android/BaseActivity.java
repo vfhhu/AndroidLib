@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,10 +83,29 @@ public abstract class BaseActivity extends Activity {
             });
         }
     }
+    public void setTextView(final EditText t, final int id) {
+        if(t==null)return;
+        setTextView(t, act.getResources().getString(id));
+    }
+
+    public void setTextView(final EditText t,final String s) {
+        if(t==null)return;
+        if(Looper.myLooper() == Looper.getMainLooper()) {
+            t.setText(s);
+        }else{
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setTextView(t, s);
+                }
+            });
+        }
+    }
     public void setTextView(final TextView t,final int id) {
         if(t==null)return;
         setTextView(t, act.getResources().getString(id));
     }
+
     public void showView(final View v) {
         if(v==null)return;
         if(Looper.myLooper() == Looper.getMainLooper()) {
