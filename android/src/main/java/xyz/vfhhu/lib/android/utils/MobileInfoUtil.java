@@ -1,18 +1,106 @@
 package xyz.vfhhu.lib.android.utils;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.LocaleList;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import java.util.Locale;
 
 /**
  * Created by leo3x on 2018/11/29.
  */
 
 public class MobileInfoUtil {
+    /**
+     * 获取当前手机系统语言。
+     *
+     * @return 返回当前系统语言。例如：当前设置的是“中文-中国”，则返回“zh-CN”
+     */
+    public static String getLang() {
+        Locale locale;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            locale = LocaleList.getDefault().get(0);
+        } else locale = Locale.getDefault();
+
+
+        String lang="";
+        if(locale.getLanguage().length()>0){
+            lang=locale.getLanguage();
+        }
+        if(locale.getCountry().length()>0){
+            if(lang.length()>0)lang+="-"+locale.getCountry();
+            else lang=locale.getCountry();
+        }
+        return lang;
+    }
+
+    /**
+     * 获取当前系统上的语言列表(Locale列表)
+     *
+     * @return 语言列表
+     */
+    public static Locale[] getSystemLanguageList() {
+        return Locale.getAvailableLocales();
+    }
+
+    /**
+     * 获取当前手机系统版本号
+     *
+     * @return 系统版本号
+     */
+    public static String getSystemVersion() {
+        return android.os.Build.VERSION.RELEASE;
+    }
+
+    /**
+     * 获取手机型号
+     *
+     * @return 手机型号
+     */
+    public static String getSystemModel() {
+        return android.os.Build.MODEL;
+    }
+
+    /**
+     * 获取手机厂商
+     *
+     * @return 手机厂商
+     */
+    public static String getDeviceBrand() {
+        return android.os.Build.BRAND;
+    }
+
+    /**
+     * 获取手机IMEI(需要“android.permission.READ_PHONE_STATE”权限)
+     *
+     * @return 手机IMEI
+     */
+    @SuppressLint({"HardwareIds", "MissingPermission"})
+    public static String getIMEI(Context ctx) {
+        TelephonyManager tm = (TelephonyManager) ctx.getSystemService(Activity.TELEPHONY_SERVICE);
+        if (tm != null) {
+            if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                return "";
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                return tm.getImei();
+            } else {
+                return tm.getDeviceId();
+            }
+        }
+        return "";
+    }
     private static String getMobileType() {
         return Build.MANUFACTURER;
     }    /**
