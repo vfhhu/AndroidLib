@@ -24,12 +24,16 @@ public abstract class BaseActivity extends Activity {
     public Activity act;
     public BaseActivity act_base;
     private boolean active  = false;
+    public Handler _handler_main;
+    public Handler _handler;
     private ActivityResultCallback onActivityResultCallback;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ctx = act = act_base = this;
         TAG=getClass().getSimpleName();
+        _handler_main=new Handler(this.getMainLooper());
+        _handler=new Handler();
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

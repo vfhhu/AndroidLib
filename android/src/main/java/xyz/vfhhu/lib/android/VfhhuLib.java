@@ -34,6 +34,7 @@ public class VfhhuLib {
     }
 
     public static void setDebug(boolean debug) {
+        init();
         VfhhuLib.debug = debug;
     }
 
