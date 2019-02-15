@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 
 public abstract class CallBackUtil<T> {
     private String TAG="";
+    public CallBackUtil(){}
     public CallBackUtil(String _TAG){TAG=_TAG;}
     public CallBackUtil(byte[] _TAG){
         try {
