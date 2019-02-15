@@ -5,10 +5,9 @@ package xyz.vfhhu.lib.android.utils;
  */
 
 public abstract class CallBackUtil<T> {
-    private T TAG;
-    public CallBackUtil(T _TAG){TAG=_TAG;}
-
-    public T getTAG() {
+    private String TAG;
+    public CallBackUtil(String _TAG){TAG=_TAG;}
+    public String getTAG() {
         return TAG;
     }
 
