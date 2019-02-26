@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +26,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     public Context ctx;
     public Activity act;
     public BaseAppCompatActivity act_base;
+    Fragment _currFragment;
     private boolean active  = false;
     public Handler _handler_main;
     public Handler _handler;
@@ -192,5 +195,19 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     }
     public interface ActivityResultCallback {
         void onActivityResult(int requestCode, int resultCode, Intent data);
+    }
+
+
+
+    public void switchFragment(Fragment fragment, String tag,int container_viewid) {
+        if (fragment != _currFragment) {
+            FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
+            if(fragment.isAdded()){
+                fragmentTransaction.hide(_currFragment).show(fragment).commit();
+            }else {
+                fragmentTransaction.hide(_currFragment).add(container_viewid, fragment, tag).commit();
+            }
+            _currFragment=fragment;
+        }
     }
 }
