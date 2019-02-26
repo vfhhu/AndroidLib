@@ -203,9 +203,11 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         if (fragment != _currFragment) {
             FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
             if(fragment.isAdded()){
-                fragmentTransaction.hide(_currFragment).show(fragment).commit();
+                if(_currFragment!=null)fragmentTransaction=fragmentTransaction.hide(_currFragment);
+                fragmentTransaction.show(fragment).commit();
             }else {
-                fragmentTransaction.hide(_currFragment).add(container_viewid, fragment, tag).commit();
+                if(_currFragment!=null)fragmentTransaction=fragmentTransaction.hide(_currFragment);
+                fragmentTransaction.add(container_viewid, fragment, tag).commit();
             }
             _currFragment=fragment;
         }
