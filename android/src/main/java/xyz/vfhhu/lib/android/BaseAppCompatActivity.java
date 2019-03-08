@@ -30,7 +30,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     private boolean active  = false;
     public Handler _handler_main;
     public Handler _handler;
-    private BaseActivity.ActivityResultCallback onActivityResultCallback;
+    private BaseAppCompatActivity.ActivityResultCallback onActivityResultCallback;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,7 +179,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             });
         }
     }
-    public void startActRet(final Intent it,final int code,final BaseActivity.ActivityResultCallback callback){
+    public void startActRet(final Intent it,final int code,final BaseAppCompatActivity.ActivityResultCallback callback){
         if(it==null)return;
         if(Looper.myLooper() == Looper.getMainLooper()) {
             onActivityResultCallback=callback;
