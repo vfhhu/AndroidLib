@@ -5,10 +5,12 @@ import android.content.Context;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 
 /**
  * Created by leo3x on 2018/8/13.
@@ -29,6 +31,40 @@ public class FileUtil {
         if(!dir.exists())dir.mkdirs();
     }
 
+    public String getDirPath(){
+        return dir.getAbsolutePath();
+    }
+    public boolean saveInput(String fname,InputStream input){
+        File f=new File(dir,fname);
+        return saveInput(f, input);
+    }
+    public boolean saveInput(File f,InputStream input){
+        try {
+            OutputStream output = new FileOutputStream(f.getAbsolutePath());
+            int byteValue;
+            while ((byteValue = input.read()) != -1) {
+                output.write(byteValue);
+            }
+            input.close();
+            output.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    public OutputStream getOutputStream(String fname){
+        File f=new File(dir,fname);
+        return getOutputStream(f);
+    }
+    public OutputStream getOutputStream(File f){
+        try {
+            return  new FileOutputStream(f.getAbsolutePath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public boolean saveBytes(String fname,byte[] data){
         File f=new File(dir,fname);
         return saveBytes(f,data);

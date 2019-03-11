@@ -5,10 +5,19 @@ import android.os.Build;
 import android.webkit.WebSettings;
 
 import java.io.IOException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -27,6 +36,7 @@ public class HttpUtils {
     public static final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
     public static final String TAG="HttpUtils";
     private static OkHttpClient client ;
+    private static OkHttpClient client_https ;
     private static HashMap<String,String> setHeader;
     private static HashMap <String,String> addHeader;
     private static  HttpUtils inst;
@@ -35,6 +45,11 @@ public class HttpUtils {
         setHeader=new HashMap<>();
         addHeader=new HashMap<>();
         inst=this;
+
+        OkHttpClient.Builder mBuilder = new OkHttpClient.Builder();
+        mBuilder.sslSocketFactory(createSSLSocketFactory(), mMyTrustManager)
+                .hostnameVerifier(new TrustAllHostnameVerifier());
+        client_https=mBuilder.build();
     }
     public static  HttpUtils init(){
         if(inst!=null)return inst;
@@ -46,6 +61,11 @@ public class HttpUtils {
         b.connectTimeout(sec, TimeUnit.SECONDS); // connect timeout
         b.readTimeout(sec, TimeUnit.SECONDS);    // socket timeout
         client=b.build();
+
+        OkHttpClient.Builder bssl=client_https.newBuilder();
+        bssl.connectTimeout(sec, TimeUnit.SECONDS); // connect timeout
+        bssl.readTimeout(sec, TimeUnit.SECONDS);    // socket timeout
+        client_https=bssl.build();
     }
     public static void setHeader(HashMap<String,String> map){setHeader=map;}
     public static void addHeader(HashMap<String,String> map){addHeader=map;}
@@ -65,7 +85,11 @@ public class HttpUtils {
         Request.Builder b=new Request.Builder().url(url);
         buildHeader(b);
         Request request = b.build();
-        Response response = client.newCall(request).execute();
+        OkHttpClient _client=client;
+        if(url.toLowerCase().startsWith("https")){
+            _client=client_https;
+        }
+        Response response = _client.newCall(request).execute();
         return response.body().string();
     }
     public static void Get(String url,final Callback callBcak) throws IOException {
@@ -74,7 +98,11 @@ public class HttpUtils {
         buildHeader(b);
         Request request = b.build();
         try{
-            client.newCall(request).enqueue(callBcak);
+            OkHttpClient _client=client;
+            if(url.toLowerCase().startsWith("https")){
+                _client=client_https;
+            }
+            _client.newCall(request).enqueue(callBcak);
         }catch (Exception e){}
 
 //        return response.body().string();
@@ -88,7 +116,11 @@ public class HttpUtils {
         buildHeader(b);
         Request request = b.post(requestBody).build();
 
-        Response response = client.newCall(request).execute();
+        OkHttpClient _client=client;
+        if(url.toLowerCase().startsWith("https")){
+            _client=client_https;
+        }
+        Response response = _client.newCall(request).execute();
         return response.body().string();
     }
     public static void Post(String url, String json,Callback callBcak) throws IOException {
@@ -100,7 +132,11 @@ public class HttpUtils {
         Request request = b.post(requestBody).build();
 
         try{
-            client.newCall(request).enqueue(callBcak);
+            OkHttpClient _client=client;
+            if(url.toLowerCase().startsWith("https")){
+                _client=client_https;
+            }
+            _client.newCall(request).enqueue(callBcak);
         }catch (Exception e){}
 
     }
@@ -116,7 +152,11 @@ public class HttpUtils {
         buildHeader(b);
         Request request = b.post(requestBody).build();
 
-        Response response = client.newCall(request).execute();
+        OkHttpClient _client=client;
+        if(url.toLowerCase().startsWith("https")){
+            _client=client_https;
+        }
+        Response response = _client.newCall(request).execute();
         return response.body().string();
     }
     public static void Post(String url, TreeMap<String,String> para,Callback callBcak) throws IOException {
@@ -132,7 +172,11 @@ public class HttpUtils {
         Request request = b.post(requestBody).build();
 
         try{
-            client.newCall(request).enqueue(callBcak);
+            OkHttpClient _client=client;
+            if(url.toLowerCase().startsWith("https")){
+                _client=client_https;
+            }
+            _client.newCall(request).enqueue(callBcak);
         }catch (Exception e){}
     }
     private static String getUserAgent(Context context) {
@@ -156,6 +200,44 @@ public class HttpUtils {
             }
         }
         return sb.toString();
+    }
+
+
+    private MyTrustManager mMyTrustManager;
+    private SSLSocketFactory createSSLSocketFactory() {
+        SSLSocketFactory ssfFactory = null;
+        try {
+            mMyTrustManager = new MyTrustManager();
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, new MyTrustManager[]{mMyTrustManager}, new SecureRandom());
+            ssfFactory = sc.getSocketFactory();
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
+        }
+
+        return ssfFactory;
+    }
+    //实现X509TrustManager接口
+    public class MyTrustManager implements X509TrustManager {
+        @Override
+        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+        }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return new X509Certificate[0];
+        }
+    }
+    //实现HostnameVerifier接口
+    private class TrustAllHostnameVerifier implements HostnameVerifier {
+        @Override
+        public boolean verify(String hostname, SSLSession session) {
+            return true;
+        }
     }
 
 }
