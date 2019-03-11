@@ -41,10 +41,16 @@ public class FileUtil {
     public boolean saveInput(File f,InputStream input){
         try {
             OutputStream output = new FileOutputStream(f.getAbsolutePath());
-            int byteValue;
-            while ((byteValue = input.read()) != -1) {
-                output.write(byteValue);
+            byte[] buffer=new byte[1024];
+            int n;
+            while((n=input.read(buffer))>-1){
+                output.write(buffer,0,n);
             }
+//
+//            int byteValue;
+//            while ((byteValue = input.read()) != -1) {
+//                output.write(byteValue);
+//            }
             input.close();
             output.close();
         } catch (Exception e) {
