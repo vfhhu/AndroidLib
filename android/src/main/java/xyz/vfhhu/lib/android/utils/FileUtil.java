@@ -88,6 +88,22 @@ public class FileUtil {
         }
         return false;
     }
+    public boolean appendBytes(String fname,byte[] data){
+        File f=new File(dir,fname);
+        return appendBytes(f,data);
+    }
+    public boolean appendBytes(File f,byte[] data){
+        try {
+            if(!f.exists())f.createNewFile();
+            FileOutputStream fop = new FileOutputStream(f,true);
+            fop.write(data);
+            fop.close();
+            return true;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     public byte[] readBytes(String fname){
         File f=new File(dir,fname);
         return readBytes(f);

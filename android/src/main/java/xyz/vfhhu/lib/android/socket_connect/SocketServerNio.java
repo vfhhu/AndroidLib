@@ -237,6 +237,7 @@ public class SocketServerNio {
         }
         return false;
     }
+
     public String getEndChar() {
         return endChar;
     }

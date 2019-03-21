@@ -2,7 +2,7 @@
 
 ```gradle
 dependencies {
-	implementation 'xyz.vfhhu.lib:android:13.5'
+	implementation 'xyz.vfhhu.lib:android:13.8'
 	implementation 'com.squareup.okhttp3:okhttp:3.10.0'
 	implementation 'com.orhanobut:logger:2.2.0'
 }
@@ -37,6 +37,13 @@ public class MainActivity extends BaseActivity{
              public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
              }
+        });
+
+        checkAllPermission(new String[]{...}, new CheckPermissionCallback() {
+            @Override
+            public void onBack(boolean isAllow) {
+                ...
+            }
         });
     }
 }

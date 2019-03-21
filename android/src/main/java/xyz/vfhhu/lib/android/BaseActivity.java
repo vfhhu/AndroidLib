@@ -3,9 +3,12 @@ package xyz.vfhhu.lib.android;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -26,9 +29,16 @@ public abstract class BaseActivity extends Activity {
     public Activity act;
     public BaseActivity act_base;
     private boolean active  = false;
+
     public Handler _handler_main;
     public Handler _handler;
     private ActivityResultCallback onActivityResultCallback;
+
+    private int TAG_PERMISSION=9090;
+    private boolean isCheckPerrmision=false;
+    private CheckPermissionCallback checkPermissionCallback;
+    private String[] _PERMISSIONS_REQUEST={};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +63,13 @@ public abstract class BaseActivity extends Activity {
     protected void onResume() {
         super.onResume();
         active =true;
+        if(isCheckPerrmision){
+            if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
+                verifyStoragePermissions();
+            }else{
+                if(checkPermissionCallback!=null)checkPermissionCallback.onBack(true);
+            }
+        }
     }
 
     public void log(String s) {
@@ -195,5 +212,44 @@ public abstract class BaseActivity extends Activity {
         void onActivityResult(int requestCode, int resultCode, Intent data);
     }
 
+
+
+
+    public int getPermissions() {
+        int permission = PackageManager.PERMISSION_GRANTED;
+        for(String permissions:_PERMISSIONS_REQUEST){
+            if(ActivityCompat.checkSelfPermission(ctx, permissions)!= PackageManager.PERMISSION_GRANTED){
+                permission=PackageManager.PERMISSION_DENIED;
+                break;
+            }
+        }
+        return permission;
+    }
+    public void verifyStoragePermissions() {
+        // Check if we have write permission
+        int permission = getPermissions();
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    act,
+                    _PERMISSIONS_REQUEST,
+                    TAG_PERMISSION
+            );
+        }else{
+            if(checkPermissionCallback!=null)checkPermissionCallback.onBack(true);
+        }
+    }
+    public void checkAllPermission(final String[] perrmisions,final CheckPermissionCallback callback){
+        if(perrmisions.length>0){
+            isCheckPerrmision=true;
+            checkPermissionCallback=callback;
+            _PERMISSIONS_REQUEST=perrmisions;
+        }else{
+            if(callback!=null)callback.onBack(true);
+        }
+    }
+    public interface CheckPermissionCallback{
+        void onBack(boolean isAllow);
+    }
 
 }
