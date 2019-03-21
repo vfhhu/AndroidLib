@@ -3,9 +3,12 @@ package xyz.vfhhu.lib.android;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -26,11 +29,17 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     public Context ctx;
     public Activity act;
     public BaseAppCompatActivity act_base;
-    Fragment _currFragment;
     private boolean active  = false;
     public Handler _handler_main;
     public Handler _handler;
     private BaseAppCompatActivity.ActivityResultCallback onActivityResultCallback;
+
+    private int TAG_PERMISSION=9090;
+    private boolean isCheckPerrmision=false;
+    private BaseActivity.CheckPermissionCallback checkPermissionCallback;
+    private String[] _PERMISSIONS_REQUEST={};
+
+    private Fragment _currFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +64,13 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         active =true;
+        if(isCheckPerrmision){
+            if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
+                verifyStoragePermissions();
+            }else{
+                if(checkPermissionCallback!=null)checkPermissionCallback.onBack(true);
+            }
+        }
     }
 
     public void log(String s) {
@@ -166,6 +182,9 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         return active;
     }
 
+
+
+    //=================start and result
     public void startAct(final Intent it){
         if(it==null)return;
         if(Looper.myLooper() == Looper.getMainLooper()) {
@@ -197,6 +216,46 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         void onActivityResult(int requestCode, int resultCode, Intent data);
     }
 
+
+
+
+    //=================Permission
+    public int getPermissions() {
+        int permission = PackageManager.PERMISSION_GRANTED;
+        for(String permissions:_PERMISSIONS_REQUEST){
+            if(ActivityCompat.checkSelfPermission(ctx, permissions)!= PackageManager.PERMISSION_GRANTED){
+                permission=PackageManager.PERMISSION_DENIED;
+                break;
+            }
+        }
+        return permission;
+    }
+    public void verifyStoragePermissions() {
+        // Check if we have write permission
+        int permission = getPermissions();
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    act,
+                    _PERMISSIONS_REQUEST,
+                    TAG_PERMISSION
+            );
+        }else{
+            if(checkPermissionCallback!=null)checkPermissionCallback.onBack(true);
+        }
+    }
+    public void checkAllPermission(final String[] perrmisions,final BaseActivity.CheckPermissionCallback callback){
+        if(perrmisions.length>0){
+            isCheckPerrmision=true;
+            checkPermissionCallback=callback;
+            _PERMISSIONS_REQUEST=perrmisions;
+        }else{
+            if(callback!=null)callback.onBack(true);
+        }
+    }
+    public interface CheckPermissionCallback{
+        void onBack(boolean isAllow);
+    }
 
 
     public void switchFragment(Fragment fragment, String tag,int container_viewid) {

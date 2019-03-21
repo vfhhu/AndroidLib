@@ -29,7 +29,6 @@ public abstract class BaseActivity extends Activity {
     public Activity act;
     public BaseActivity act_base;
     private boolean active  = false;
-
     public Handler _handler_main;
     public Handler _handler;
     private ActivityResultCallback onActivityResultCallback;
@@ -181,6 +180,8 @@ public abstract class BaseActivity extends Activity {
         return active;
     }
 
+
+    //=================start and result
     public void startAct(final Intent it){
         if(it==null)return;
         if(Looper.myLooper() == Looper.getMainLooper()) {
@@ -214,7 +215,7 @@ public abstract class BaseActivity extends Activity {
 
 
 
-
+    //=================Permission
     public int getPermissions() {
         int permission = PackageManager.PERMISSION_GRANTED;
         for(String permissions:_PERMISSIONS_REQUEST){
