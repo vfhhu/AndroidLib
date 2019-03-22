@@ -20,10 +20,13 @@ import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 
+import xyz.vfhhu.lib.android.base_interface.ActivityResultCallback;
+import xyz.vfhhu.lib.android.base_interface.CheckPermissionCallback;
+
 /**
  * Created by leo3x on 2019/2/1.
  */
-
+@Deprecated
 public class BaseAppCompatActivity extends AppCompatActivity {
     public String TAG;
     public Context ctx;
@@ -32,11 +35,11 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     private boolean active  = false;
     public Handler _handler_main;
     public Handler _handler;
-    private BaseAppCompatActivity.ActivityResultCallback onActivityResultCallback;
+    private ActivityResultCallback onActivityResultCallback;
 
     private int TAG_PERMISSION=9090;
     private boolean isCheckPerrmision=false;
-    private BaseActivity.CheckPermissionCallback checkPermissionCallback;
+    private CheckPermissionCallback checkPermissionCallback;
     private String[] _PERMISSIONS_REQUEST={};
 
     private Fragment _currFragment;
@@ -177,11 +180,9 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             });
         }
     }
-
     public boolean isActive() {
         return active;
     }
-
 
 
     //=================start and result
@@ -198,7 +199,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             });
         }
     }
-    public void startActRet(final Intent it,final int code,final BaseAppCompatActivity.ActivityResultCallback callback){
+    public void startActRet(final Intent it,final int code,final ActivityResultCallback callback){
         if(it==null)return;
         if(Looper.myLooper() == Looper.getMainLooper()) {
             onActivityResultCallback=callback;
@@ -212,11 +213,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             });
         }
     }
-    public interface ActivityResultCallback {
-        void onActivityResult(int requestCode, int resultCode, Intent data);
-    }
-
-
 
 
     //=================Permission
@@ -244,7 +240,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             if(checkPermissionCallback!=null)checkPermissionCallback.onBack(true);
         }
     }
-    public void checkAllPermission(final String[] perrmisions,final BaseActivity.CheckPermissionCallback callback){
+    public void checkAllPermission(final String[] perrmisions,final CheckPermissionCallback callback){
         if(perrmisions.length>0){
             isCheckPerrmision=true;
             checkPermissionCallback=callback;
@@ -253,11 +249,9 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             if(callback!=null)callback.onBack(true);
         }
     }
-    public interface CheckPermissionCallback{
-        void onBack(boolean isAllow);
-    }
 
 
+    //=================Fragment
     public void switchFragment(Fragment fragment, String tag,int container_viewid) {
         if (fragment != _currFragment) {
             FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();

@@ -6,19 +6,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 /**
- * Created by leo3x on 2019/2/26.
+ * Created by leo3x on 2019/3/22.
  */
 
-public class BaseFragment extends Fragment {
-
-    private BaseActivity act_base;
-    private OnFragmentInteractionListener mListener;
-    public BaseFragment() {
+public class BaseFragmentAppCompat extends Fragment {
+    private BaseActivityAppCompat act_base;
+    private BaseFragment.OnFragmentInteractionListener mListener;
+    public BaseFragmentAppCompat() {
         // Required empty public constructor
     }
 
-    public static BaseFragment newInstance() {
-        BaseFragment fragment = new BaseFragment();
+    public static BaseFragmentAppCompat newInstance() {
+        BaseFragmentAppCompat fragment = new BaseFragmentAppCompat();
         return fragment;
     }
     public static BaseFragment newInstance(Bundle args) {
@@ -33,9 +32,9 @@ public class BaseFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        act_base=(BaseActivity)context;
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        act_base=(BaseActivityAppCompat)context;
+        if (context instanceof BaseFragment.OnFragmentInteractionListener) {
+            mListener = (BaseFragment.OnFragmentInteractionListener) context;
         } else {
 //            throw new RuntimeException(context.toString()
 //                    + " must implement OnFragmentInteractionListener");
@@ -57,8 +56,7 @@ public class BaseFragment extends Fragment {
     }
 
     //获取宿主Activity
-    protected BaseActivity getActivityParent() {
+    protected BaseActivityAppCompat getActivityParent() {
         return act_base;
     }
-
 }

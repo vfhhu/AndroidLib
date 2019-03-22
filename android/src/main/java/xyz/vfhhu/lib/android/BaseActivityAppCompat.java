@@ -10,8 +10,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -24,14 +24,14 @@ import xyz.vfhhu.lib.android.base_interface.ActivityResultCallback;
 import xyz.vfhhu.lib.android.base_interface.CheckPermissionCallback;
 
 /**
- * Created by leo3x on 2018/6/30.
+ * Created by leo3x on 2019/3/22.
  */
 
-public abstract class BaseActivity extends FragmentActivity {
+public class BaseActivityAppCompat extends AppCompatActivity {
     public String TAG;
     public Context ctx;
     public Activity act;
-    public BaseActivity act_base;
+    public BaseActivityAppCompat act_base;
     private boolean active  = false;
     public Handler _handler_main;
     public Handler _handler;
@@ -97,7 +97,7 @@ public abstract class BaseActivity extends FragmentActivity {
     public void toast(final int s) {
         toast(this.getResources().getString(s));
     }
-    public void setTextView(final TextView t,final String s) {
+    public void setTextView(final TextView t, final String s) {
         if(t==null)return;
         if(Looper.myLooper() == Looper.getMainLooper()) {
             t.setText(s);
