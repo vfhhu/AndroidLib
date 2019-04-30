@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
@@ -20,7 +22,10 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Callback;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
 import okhttp3.FormBody;
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -49,6 +54,7 @@ public class HttpUtils {
         OkHttpClient.Builder mBuilder = new OkHttpClient.Builder();
         mBuilder.sslSocketFactory(createSSLSocketFactory(), mMyTrustManager)
                 .hostnameVerifier(new TrustAllHostnameVerifier());
+        mBuilder.cookieJar(getCookieJar());
         client_https=mBuilder.build();
     }
     public static  HttpUtils init(){
@@ -239,5 +245,21 @@ public class HttpUtils {
             return true;
         }
     }
+
+    private static CookieJar getCookieJar(){
+        return new CookieJar() {
+            @Override
+            public void saveFromResponse(HttpUrl httpUrl, List<Cookie> list) {
+                cookieStore.put(httpUrl.host(), list);
+            }
+
+            @Override
+            public List<Cookie> loadForRequest(HttpUrl httpUrl) {
+                List<Cookie> cookies = cookieStore.get(httpUrl.host());
+                return cookies != null ? cookies : new ArrayList<Cookie>();
+            }
+        };
+    }
+    private static final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
 
 }
