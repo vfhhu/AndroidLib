@@ -3,7 +3,6 @@ package xyz.vfhhu.lib.android.http;
 import android.content.Context;
 import android.os.Build;
 import android.webkit.WebSettings;
-
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -45,22 +44,38 @@ public class HttpUtils {
     private static HashMap<String,String> setHeader;
     private static HashMap <String,String> addHeader;
     private static  HttpUtils inst;
+    private static boolean isCookie=false;
+    private static OkHttpClient.Builder mBuilder;
     private HttpUtils(){
-        client = new OkHttpClient();
         setHeader=new HashMap<>();
         addHeader=new HashMap<>();
         inst=this;
 
-        OkHttpClient.Builder mBuilder = new OkHttpClient.Builder();
+        if(mBuilder==null)mBuilder = new OkHttpClient.Builder();
+        if(isCookie)mBuilder.cookieJar(getCookieJar());
+        client=mBuilder.build();
+
         mBuilder.sslSocketFactory(createSSLSocketFactory(), mMyTrustManager)
                 .hostnameVerifier(new TrustAllHostnameVerifier());
-        mBuilder.cookieJar(getCookieJar());
         client_https=mBuilder.build();
     }
-    public static  HttpUtils init(){
+    public static HttpUtils init(){
         if(inst!=null)return inst;
         return new HttpUtils();
     }
+    public static OkHttpClient getClient(){
+        if(inst==null)init();
+        return client;
+    }
+    public static OkHttpClient.Builder getClientBuilder(){
+        if(inst==null)init();
+        return mBuilder;
+    }
+    public static void ReBuildClient(OkHttpClient.Builder b){
+        mBuilder=b;
+        new HttpUtils();
+    }
+
     public static void setTimeout(long sec){
         if(inst==null)init();
         OkHttpClient.Builder b=client.newBuilder();
@@ -84,6 +99,10 @@ public class HttpUtils {
 //            b.removeHeader(e.getKey()).addHeader(e.getKey(),e.getValue());
             b.addHeader(e.getKey(),e.getValue());
         }
+//        if(isCookie){
+//            String cookieS=getCookie(b.build().url().host());
+//            if(cookieS.length()>0)b.addHeader("Cookie",cookieS);
+//        }
     }
 
     public static String Get(String url) throws IOException {
@@ -96,7 +115,21 @@ public class HttpUtils {
             _client=client_https;
         }
         Response response = _client.newCall(request).execute();
+//        if(isCookie)setCookie(response);
         return response.body().string();
+    }
+    public static Response GetResponse(String url) throws IOException {
+        if(inst==null)init();
+        Request.Builder b=new Request.Builder().url(url);
+        buildHeader(b);
+        Request request = b.build();
+        OkHttpClient _client=client;
+        if(url.toLowerCase().startsWith("https")){
+            _client=client_https;
+        }
+        Response response = _client.newCall(request).execute();
+//        if(isCookie)setCookie(response);
+        return response;
     }
     public static void Get(String url,final Callback callBcak) throws IOException {
         if(inst==null)init();
@@ -127,7 +160,24 @@ public class HttpUtils {
             _client=client_https;
         }
         Response response = _client.newCall(request).execute();
+//        if(isCookie)setCookie(response);
         return response.body().string();
+    }
+    public static Response PostResponse(String url, String json) throws IOException {
+        if(inst==null)init();
+        RequestBody requestBody = RequestBody.create(JSON, json);
+
+        Request.Builder b=new Request.Builder().url(url);
+        buildHeader(b);
+        Request request = b.post(requestBody).build();
+
+        OkHttpClient _client=client;
+        if(url.toLowerCase().startsWith("https")){
+            _client=client_https;
+        }
+        Response response = _client.newCall(request).execute();
+//        if(isCookie)setCookie(response);
+        return response;
     }
     public static void Post(String url, String json,Callback callBcak) throws IOException {
         if(inst==null)init();
@@ -163,7 +213,28 @@ public class HttpUtils {
             _client=client_https;
         }
         Response response = _client.newCall(request).execute();
+//        if(isCookie)setCookie(response);
         return response.body().string();
+    }
+    public static Response PostResponse(String url, TreeMap<String,String> para) throws IOException {
+        if(inst==null)init();
+        FormBody.Builder builder = new FormBody.Builder();
+        for (String key : para.keySet()) {
+            builder.add(key, para.get(key));
+        }
+        RequestBody requestBody=builder.build();
+
+        Request.Builder b=new Request.Builder().url(url);
+        buildHeader(b);
+        Request request = b.post(requestBody).build();
+
+        OkHttpClient _client=client;
+        if(url.toLowerCase().startsWith("https")){
+            _client=client_https;
+        }
+        Response response = _client.newCall(request).execute();
+//        if(isCookie)setCookie(response);
+        return response;
     }
     public static void Post(String url, TreeMap<String,String> para,Callback callBcak) throws IOException {
         if(inst==null)init();
@@ -246,13 +317,63 @@ public class HttpUtils {
         }
     }
 
+
+//    private static void setCookie(Response response){
+//        cookieString.put(response.request().url().host(), response.headers("Set-Cookie"));
+//    }
+//    private static String getCookie(String host) {
+//        List<String> cookies = cookieString.get(host);
+//        String cookie = "";
+//        if(cookies !=null && cookies.size()>0){
+//            for (int i = cookies.size() - 1; i >= 0; i--) {
+//                cookie = cookie + cookies.get(i).replace("path=/", "") + " ";
+//            }
+//        }
+//        return cookie;
+//    }
+
+
+    public static boolean isCookie() {
+        return isCookie;
+    }
+
+    public static void setCookie(boolean cookie) {
+        isCookie = cookie;
+    }
+
     private static CookieJar getCookieJar(){
         return new CookieJar() {
             @Override
             public void saveFromResponse(HttpUrl httpUrl, List<Cookie> list) {
-                cookieStore.put(httpUrl.host(), list);
+                if(list==null)return;
+                List<Cookie> cookies = cookieStore.get(httpUrl.host());
+                if(cookies!=null){
+                    List<Cookie> newSaveCookieS=new ArrayList<>();
+                    for(Cookie ck:cookies){
+                        newSaveCookieS.add(ck);
+                    }
+                    for(Cookie ckN:list){
+                        boolean isAdd=true;
+                        if(cookies!=null){
+                            String keyN=ckN.name()+";"+ckN.domain()+";"+ckN.path();
+                            for(Cookie ck:cookies){
+                                String keyO=ck.name()+";"+ck.domain()+";"+ck.path();
+                                if(keyN.equals(keyO)){
+                                    isAdd=false;
+                                    ck=ckN;
+                                    break;
+                                }
+                            }
+                        }
+                        if(isAdd){;
+                            newSaveCookieS.add(ckN);
+                        }
+                    }
+                    cookieStore.put(httpUrl.host(), newSaveCookieS);
+                }else{
+                    cookieStore.put(httpUrl.host(), list);
+                }
             }
-
             @Override
             public List<Cookie> loadForRequest(HttpUrl httpUrl) {
                 List<Cookie> cookies = cookieStore.get(httpUrl.host());
@@ -261,5 +382,6 @@ public class HttpUtils {
         };
     }
     private static final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
+//    private static final HashMap<String, List<String>> cookieString = new HashMap<>();
 
 }
