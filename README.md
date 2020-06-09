@@ -54,7 +54,7 @@ FileUtil will use context.getExternalFilesDir creat folder in app package<br>
 and controll file at the same folder
 ```java
 //new
-FileUtil fu=FileUtil(context,"dirname");
+FileUtil fu=new FileUtil(context,"dirname");
 
 //save
 fu.saveBytes(String filename, byte[] data);
