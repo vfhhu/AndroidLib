@@ -19,7 +19,7 @@ import java.io.OutputStream;
 public class FileUtil {
     Context ctx;
     File dir;
-    private int delete_cnt=0;
+    private static int delete_cnt=0;
     public FileUtil(Context ctx){
         this.ctx=ctx;
         dir=ctx.getExternalFilesDir(null);
@@ -39,6 +39,9 @@ public class FileUtil {
         return saveInput(f, input);
     }
     public boolean saveInput(File f,InputStream input){
+        return saveInputS(f, input);
+    }
+    public static boolean saveInputS(File f,InputStream input){
         try {
             OutputStream output = new FileOutputStream(f.getAbsolutePath());
             byte[] buffer=new byte[1024];
@@ -46,11 +49,6 @@ public class FileUtil {
             while((n=input.read(buffer))>-1){
                 output.write(buffer,0,n);
             }
-//
-//            int byteValue;
-//            while ((byteValue = input.read()) != -1) {
-//                output.write(byteValue);
-//            }
             input.close();
             output.close();
         } catch (Exception e) {
@@ -64,6 +62,9 @@ public class FileUtil {
         return getOutputStream(f);
     }
     public OutputStream getOutputStream(File f){
+        return getOutputStreamS(f);
+    }
+    public static OutputStream getOutputStreamS(File f){
         try {
             return  new FileOutputStream(f.getAbsolutePath());
         } catch (Exception e) {
@@ -76,8 +77,11 @@ public class FileUtil {
         return saveBytes(f,data);
     }
     public boolean saveBytes(File f,byte[] data){
+        return saveBytesS(f,data);
+    }
+    public static boolean saveBytesS(File f,byte[] data){
         try {
-            if(f.exists())delete(f);
+            if(f.exists())deleteS(f);
             f.createNewFile();
             FileOutputStream fop = new FileOutputStream(f);
             fop.write(data);
@@ -92,7 +96,10 @@ public class FileUtil {
         File f=new File(dir,fname);
         return appendBytes(f,data);
     }
-    public boolean appendBytes(File f,byte[] data){
+    public  boolean appendBytes(File f,byte[] data){
+        return appendBytesS(f,data);
+    }
+    public static boolean appendBytesS(File f,byte[] data){
         try {
             if(!f.exists())f.createNewFile();
             FileOutputStream fop = new FileOutputStream(f,true);
@@ -109,6 +116,9 @@ public class FileUtil {
         return readBytes(f);
     }
     public byte[] readBytes(File f){
+        return readBytesS(f);
+    }
+    public static byte[] readBytesS(File f){
         byte[] ret=new byte[0];
         if(f==null || !f.exists())return ret;
         try {
@@ -135,6 +145,9 @@ public class FileUtil {
         return readString(f);
     }
     public String readString(File f){
+        return readStringS(f);
+    }
+    public static String readStringS(File f){
         String ret="";
         if(f==null || !f.exists())return ret;
         try {
@@ -152,6 +165,9 @@ public class FileUtil {
         return delete(f);
     }
     public boolean delete(File f){
+        return deleteS(f);
+    }
+    public static boolean deleteS(File f){
         boolean isDelete=false;
         if(f!=null && f.exists()){
             File nf=new File(f.getPath()+"_"+System.currentTimeMillis()+"_"+delete_cnt);

@@ -1,7 +1,9 @@
 package xyz.vfhhu.lib.android;
 
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.os.Build;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
@@ -37,7 +39,22 @@ public class VfhhuLib {
         init();
         VfhhuLib.debug = debug;
     }
+    public static WebView setWebView(WebView webview){
+        webview.removeJavascriptInterface("searchBoxJavaBridge_");
+        webview.removeJavascriptInterface("accessibility");
+        webview.removeJavascriptInterface("accessibilityTraversal");
 
+        WebSettings websettings = webview.getSettings();
+        websettings.setJavaScriptEnabled(false);
+        websettings.setDomStorageEnabled(false);
+        websettings.setDatabaseEnabled(false);
+        websettings.setAllowFileAccess(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            websettings.setAllowFileAccessFromFileURLs(false);
+            websettings.setAllowUniversalAccessFromFileURLs(false);
+        }
+        return webview;
+    }
     public static boolean report_bug(Context ctx,String id,String token, String title,String data){
         return report_bug(ctx,id,token, title,data, ctx.getPackageName(),"you have a message");
     }

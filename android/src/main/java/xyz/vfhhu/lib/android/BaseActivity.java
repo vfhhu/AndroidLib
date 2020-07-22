@@ -8,15 +8,20 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
+//import android.support.v4.app.ActivityCompat;
+//import android.support.v4.app.Fragment;
+//import android.support.v4.app.FragmentActivity;
+//import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.orhanobut.logger.Logger;
 
@@ -53,8 +58,9 @@ public abstract class BaseActivity extends FragmentActivity {
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(onActivityResultCallback!=null){
-            onActivityResultCallback.onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
+        if (onActivityResultCallback != null) {
+            onActivityResultCallback.onActivityResult(requestCode, resultCode, data);
         }
     }
     @Override
@@ -264,5 +270,8 @@ public abstract class BaseActivity extends FragmentActivity {
             }
             _currFragment=fragment;
         }
+    }
+    public Fragment get_currFragment() {
+        return _currFragment;
     }
 }

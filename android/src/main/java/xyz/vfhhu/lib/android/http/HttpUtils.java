@@ -3,6 +3,8 @@ package xyz.vfhhu.lib.android.http;
 import android.content.Context;
 import android.os.Build;
 import android.webkit.WebSettings;
+
+import java.io.File;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -12,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
@@ -26,10 +29,13 @@ import okhttp3.CookieJar;
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import xyz.vfhhu.lib.android.utils.CallBackUtil;
+import xyz.vfhhu.lib.android.utils.FileUtil;
 
 /**
  * Created by leo3x on 2018/6/21.
@@ -255,6 +261,70 @@ public class HttpUtils {
             }
             _client.newCall(request).enqueue(callBcak);
         }catch (Exception e){}
+    }
+
+    public static void upload(String url,TreeMap<String,String> para,String fileKey, File f, String imageType, Callback callBcak){
+        RequestBody fileBody = RequestBody.create(MediaType.parse(imageType), f);//"image/png"
+        MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart(fileKey, "head_image", fileBody);
+        if(para!=null){
+            for (String key : para.keySet()) {
+                requestBodyBuilder.addFormDataPart(key, para.get(key));
+            }
+        }
+
+        RequestBody requestBody=requestBodyBuilder.build();
+        Request.Builder b=new Request.Builder().url(url);
+        buildHeader(b);
+        Request request = b.post(requestBody).build();
+
+        try{
+            OkHttpClient _client=client;
+            if(url.toLowerCase().startsWith("https")){
+                _client=client_https;
+            }
+            _client.newCall(request).enqueue(callBcak);
+        }catch (Exception e){}
+
+    }
+
+    private static boolean isDownload=false;
+    private static ConcurrentHashMap<String,Map<String,Object>>  downloadMap;
+    public static void download(String url, File f, CallBackUtil<String> callback){
+        if(downloadMap==null)downloadMap=new ConcurrentHashMap<>();
+        Map<String,Object>map=new HashMap<>();
+        map.put("file",f);
+        map.put("callback",callback);
+        downloadMap.put(url,map);
+        if(isDownload)return;
+        isDownload=true;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+               while (downloadMap.size()>0){
+                   Map.Entry<String,Map<String,Object>> entry = downloadMap.entrySet().iterator().next();
+                   String key = entry.getKey();
+                   Map<String,Object>map = entry.getValue();
+                   File f=(File)map.get("file");
+                   CallBackUtil<String> callback=(CallBackUtil)map.get("callback");
+                   downloadMap.remove(key);
+                   try {
+                       Response res=HttpUtils.GetResponse(key);
+                       if(res.isSuccessful()){
+                           FileUtil.saveBytesS(f,res.body().bytes());
+                           callback.onData("true",res.code()+"",key,f.getAbsolutePath());
+                       }else{
+                           callback.onData("false",res.code()+"",res.message(),res.toString());
+                       }
+                   } catch (IOException e) {
+                       e.printStackTrace();
+                   }
+
+               }
+               isDownload=false;
+            }
+        }).start();
     }
     private static String getUserAgent(Context context) {
         String userAgent = "";

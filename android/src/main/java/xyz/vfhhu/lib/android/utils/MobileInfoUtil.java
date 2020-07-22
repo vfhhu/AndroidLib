@@ -7,13 +7,17 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.DhcpInfo;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.LocaleList;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
+//import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import androidx.core.app.ActivityCompat;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -208,7 +212,12 @@ public class MobileInfoUtil {
     }
 
 
-
+//    public static String getWifiGetWayIP(Context ctx) {
+//        WifiManager wifii= (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
+//        DhcpInfo d=wifii.getDhcpInfo();
+//        String getwayIp=HashUtil.intToIp(d.gateway);
+//        return getwayIp;
+//    }
 
 
 }

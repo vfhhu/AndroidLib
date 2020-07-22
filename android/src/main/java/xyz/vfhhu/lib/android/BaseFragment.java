@@ -3,18 +3,26 @@ package xyz.vfhhu.lib.android;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.os.Looper;
+//import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+
+import com.orhanobut.logger.Logger;
 
 /**
  * Created by leo3x on 2019/2/26.
  */
 
 public class BaseFragment extends Fragment {
-
+    public String TAG;
     private BaseActivity act_base;
     private OnFragmentInteractionListener mListener;
     public BaseFragment() {
         // Required empty public constructor
+        TAG=getClass().getSimpleName();
     }
 
     public static BaseFragment newInstance() {
@@ -57,8 +65,29 @@ public class BaseFragment extends Fragment {
     }
 
     //获取宿主Activity
-    protected BaseActivity getActivityParent() {
+    public BaseActivity getActivityParent() {
         return act_base;
+    }
+    public void log(String s) {
+        if(VfhhuLib.isDebug()) Log.d(TAG,s);
+    }
+    public void loggger(Object s) {
+        if(VfhhuLib.isDebug()) Logger.d(s);
+    }
+    public void toast(final String s) {
+        if(Looper.myLooper() == Looper.getMainLooper()) {
+            Toast.makeText(act_base,s,Toast.LENGTH_LONG).show();
+        }else{
+            act_base.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(act_base,s,Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    }
+    public void toast(final int s) {
+        toast(this.getResources().getString(s));
     }
 
 }
