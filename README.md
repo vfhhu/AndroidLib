@@ -1,5 +1,5 @@
 # AndroidLib
-
+gradle
 ```gradle
 dependencies {
 	implementation 'xyz.vfhhu.lib:android:16.0'
@@ -8,7 +8,8 @@ dependencies {
 }
 ```
 
-```gradle for androidx
+gradle for androidx
+```gradle
 dependencies {
 	implementation 'xyz.vfhhu.lib:android:17.0'
 	implementation 'com.squareup.okhttp3:okhttp:3.10.0'
