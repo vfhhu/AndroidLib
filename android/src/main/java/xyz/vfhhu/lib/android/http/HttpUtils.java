@@ -61,8 +61,8 @@ public class HttpUtils {
         if(isCookie)mBuilder.cookieJar(getCookieJar());
         client=mBuilder.build();
 
-        mBuilder.sslSocketFactory(createSSLSocketFactory(), mMyTrustManager)
-                .hostnameVerifier(new TrustAllHostnameVerifier());
+//        mBuilder.sslSocketFactory(createSSLSocketFactory(), mMyTrustManager)
+//                .hostnameVerifier(new TrustAllHostnameVerifier());
         client_https=mBuilder.build();
     }
     public static HttpUtils init(){
@@ -350,42 +350,42 @@ public class HttpUtils {
     }
 
 
-    private MyTrustManager mMyTrustManager;
-    private SSLSocketFactory createSSLSocketFactory() {
-        SSLSocketFactory ssfFactory = null;
-        try {
-            mMyTrustManager = new MyTrustManager();
-            SSLContext sc = SSLContext.getInstance("TLS");
-            sc.init(null, new MyTrustManager[]{mMyTrustManager}, new SecureRandom());
-            ssfFactory = sc.getSocketFactory();
-        } catch (Exception ignored) {
-            ignored.printStackTrace();
-        }
-
-        return ssfFactory;
-    }
+//    private MyTrustManager mMyTrustManager;
+//    private SSLSocketFactory createSSLSocketFactory() {
+//        SSLSocketFactory ssfFactory = null;
+//        try {
+//            mMyTrustManager = new MyTrustManager();
+//            SSLContext sc = SSLContext.getInstance("TLS");
+//            sc.init(null, new MyTrustManager[]{mMyTrustManager}, new SecureRandom());
+//            ssfFactory = sc.getSocketFactory();
+//        } catch (Exception ignored) {
+//            ignored.printStackTrace();
+//        }
+//
+//        return ssfFactory;
+//    }
     //实现X509TrustManager接口
-    public class MyTrustManager implements X509TrustManager {
-        @Override
-        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-        }
-
-        @Override
-        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-        }
-
-        @Override
-        public X509Certificate[] getAcceptedIssuers() {
-            return new X509Certificate[0];
-        }
-    }
-    //实现HostnameVerifier接口
-    private class TrustAllHostnameVerifier implements HostnameVerifier {
-        @Override
-        public boolean verify(String hostname, SSLSession session) {
-            return true;
-        }
-    }
+//    public class MyTrustManager implements X509TrustManager {
+//        @Override
+//        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+//        }
+//
+//        @Override
+//        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+//        }
+//
+//        @Override
+//        public X509Certificate[] getAcceptedIssuers() {
+//            return new X509Certificate[0];
+//        }
+//    }
+//    //实现HostnameVerifier接口
+//    private class TrustAllHostnameVerifier implements HostnameVerifier {
+//        @Override
+//        public boolean verify(String hostname, SSLSession session) {
+//            return true;
+//        }
+//    }
 
 
 //    private static void setCookie(Response response){

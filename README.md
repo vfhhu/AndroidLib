@@ -7,6 +7,14 @@ dependencies {
 	implementation 'com.orhanobut:logger:2.2.0'
 }
 ```
+
+```gradle for androidx
+dependencies {
+	implementation 'xyz.vfhhu.lib:android:17.0'
+	implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+	implementation 'com.orhanobut:logger:2.2.0'
+}
+```
 # How to use
 ## init
 In LAUNCHER Activity like MainActivity
