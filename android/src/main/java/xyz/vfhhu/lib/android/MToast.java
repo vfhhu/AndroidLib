@@ -9,29 +9,40 @@ import android.widget.Toast;
  */
 
 public class MToast {
+    private static Toast _toast;
+    public static Toast getToast() {
+        return _toast;
+    }
+
+    public static void setToast(Toast _toast) {
+        MToast._toast = _toast;
+    }
     public static void show(final Activity act, final CharSequence text,final int duration){
         if(Looper.getMainLooper().getThread() == Thread.currentThread()){
-            Toast.makeText(act,text, duration).show();
+            if(_toast==null)Toast.makeText(act,text, duration).show();
+            else _toast.show();
             return;
         }
         act.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(act,text, duration).show();
+                if(_toast==null)Toast.makeText(act,text, duration).show();
+                else _toast.show();
 
             }
         });
     }
     public static void show(final Activity act, final int resId, final int duration){
         if(Looper.getMainLooper().getThread() == Thread.currentThread()){
-            Toast.makeText(act,resId, duration).show();
+            if(_toast==null)Toast.makeText(act,resId, duration).show();
+            else _toast.show();
             return;
         }
         act.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(act,resId, duration).show();
-
+                if(_toast==null)Toast.makeText(act,resId, duration).show();
+                else _toast.show();
             }
         });
     }
