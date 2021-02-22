@@ -69,8 +69,9 @@ public class BaseFragment extends Fragment {
         return _toast;
     }
 
-    public void setToast(Toast _toast) {
+    public Toast setToast(Toast _toast) {
         this._toast = _toast;
+        return this._toast;
     }
     //获取宿主Activity
     public BaseActivity getActivityParent() {

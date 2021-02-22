@@ -13,9 +13,9 @@ public class MToast {
     public static Toast getToast() {
         return _toast;
     }
-
-    public static void setToast(Toast _toast) {
+    public static Toast setToast(Toast _toast) {
         MToast._toast = _toast;
+        return MToast._toast;
     }
     public static void show(final Activity act, final CharSequence text,final int duration){
         if(Looper.getMainLooper().getThread() == Thread.currentThread()){
