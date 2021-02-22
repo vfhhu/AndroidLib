@@ -51,7 +51,7 @@ public class UdpClient {
             public void run() {
                 isClose=false;
                 while (!isClose){
-                    byte[] recbuf = new byte[1024];
+                    byte[] recbuf = new byte[65535];
                     DatagramPacket recpacket = new DatagramPacket(recbuf,recbuf.length);
                     if(socket!=null){
                         try {

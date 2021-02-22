@@ -20,6 +20,7 @@ public class BaseFragmentAppCompat extends Fragment {
     public String TAG;
     private BaseActivityAppCompat act_base;
     private BaseFragment.OnFragmentInteractionListener mListener;
+    private Toast _toast;
     public BaseFragmentAppCompat() {
         // Required empty public constructor
         TAG=getClass().getSimpleName();
@@ -63,6 +64,13 @@ public class BaseFragmentAppCompat extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+    public Toast getToast() {
+        return _toast;
+    }
+
+    public void setToast(Toast _toast) {
+        this._toast = _toast;
+    }
 
     //获取宿主Activity
     public BaseActivityAppCompat getActivityParent() {
@@ -76,12 +84,14 @@ public class BaseFragmentAppCompat extends Fragment {
     }
     public void toast(final String s) {
         if(Looper.myLooper() == Looper.getMainLooper()) {
-            Toast.makeText(act_base,s,Toast.LENGTH_LONG).show();
+            if(_toast==null)Toast.makeText(act_base,s,Toast.LENGTH_LONG).show();
+            else _toast.show();
         }else{
             act_base.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(act_base,s,Toast.LENGTH_LONG).show();
+                    if(_toast==null)Toast.makeText(act_base,s,Toast.LENGTH_LONG).show();
+                    else _toast.show();
                 }
             });
         }

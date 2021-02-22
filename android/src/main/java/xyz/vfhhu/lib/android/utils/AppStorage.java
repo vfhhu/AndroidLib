@@ -3,15 +3,14 @@ package xyz.vfhhu.lib.android.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import xyz.vfhhu.lib.android.BuildConfig;
-
 /**
  * Created by leo3x on 2018/11/26.
  */
 
 public class AppStorage {
     private static String getSpKey(Context ct){
-        return ct.getPackageName()+"_"+ BuildConfig.APPLICATION_ID;
+//        return ct.getPackageName()+"_"+ BuildConfig.APPLICATION_ID;
+        return ct.getPackageName()+"_libvf";
     }
 
     public static void setSaveString(Context ct, String tag, String data){

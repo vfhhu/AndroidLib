@@ -23,11 +23,20 @@ public class VfhhuLib {
     private static boolean debug=false;
     private static VfhhuLib _instance;
     private VfhhuLib(){
-        Logger.clearLogAdapters();
-        Logger.addLogAdapter(new AndroidLogAdapter());
+
     }
     public static VfhhuLib init(){
         if(_instance==null)_instance=new VfhhuLib();
+        Logger.clearLogAdapters();
+        Logger.addLogAdapter(new AndroidLogAdapter());
+        return _instance;
+    }
+    public static VfhhuLib init(AndroidLogAdapter ala){
+        if(_instance==null)_instance=new VfhhuLib();
+        if(ala!=null){
+            Logger.clearLogAdapters();
+            Logger.addLogAdapter(ala);
+        }
         return _instance;
     }
 
@@ -36,7 +45,7 @@ public class VfhhuLib {
     }
 
     public static void setDebug(boolean debug) {
-        init();
+        //init();
         VfhhuLib.debug = debug;
     }
     public static WebView setWebView(WebView webview){
