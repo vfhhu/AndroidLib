@@ -48,7 +48,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     private String[] _PERMISSIONS_REQUEST={};
 
     private Fragment _currFragment;
-    private Toast _toast;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,13 +82,17 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         }
     }
 
-    public Toast getToast() {
-        return _toast;
-    }
-
-    public Toast setToast(Toast _toast) {
-        this._toast = _toast;
-        return this._toast;
+    public void showoast(final Toast _toast) {
+        if(Looper.myLooper() == Looper.getMainLooper()) {
+            _toast.show();
+        }else{
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    _toast.show();
+                }
+            });
+        }
     }
     public void log(String s) {
         if(VfhhuLib.isDebug()) Log.d(TAG,s);
@@ -99,14 +102,12 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     }
     public void toast(final String s) {
         if(Looper.myLooper() == Looper.getMainLooper()) {
-            if(_toast==null)Toast.makeText(ctx,s,Toast.LENGTH_LONG).show();
-            else _toast.show();
+            Toast.makeText(ctx,s,Toast.LENGTH_LONG).show();
         }else{
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if(_toast==null)Toast.makeText(ctx,s,Toast.LENGTH_LONG).show();
-                    else _toast.show();
+                    Toast.makeText(ctx,s,Toast.LENGTH_LONG).show();
                 }
             });
         }

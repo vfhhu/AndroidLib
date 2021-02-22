@@ -20,7 +20,6 @@ public class BaseFragment extends Fragment {
     public String TAG;
     private BaseActivity act_base;
     private OnFragmentInteractionListener mListener;
-    private Toast _toast;
     public BaseFragment() {
         // Required empty public constructor
         TAG=getClass().getSimpleName();
@@ -65,13 +64,17 @@ public class BaseFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public Toast getToast() {
-        return _toast;
-    }
-
-    public Toast setToast(Toast _toast) {
-        this._toast = _toast;
-        return this._toast;
+    public void showoast(final Toast _toast) {
+        if(Looper.myLooper() == Looper.getMainLooper()) {
+            _toast.show();
+        }else{
+            act_base.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    _toast.show();
+                }
+            });
+        }
     }
     //获取宿主Activity
     public BaseActivity getActivityParent() {
@@ -85,15 +88,12 @@ public class BaseFragment extends Fragment {
     }
     public void toast(final String s) {
         if(Looper.myLooper() == Looper.getMainLooper()) {
-            if(_toast==null)Toast.makeText(act_base,s,Toast.LENGTH_LONG).show();
-            else _toast.show();
-
+            Toast.makeText(act_base,s,Toast.LENGTH_LONG).show();
         }else{
             act_base.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if(_toast==null)Toast.makeText(act_base,s,Toast.LENGTH_LONG).show();
-                    else _toast.show();
+                    Toast.makeText(act_base,s,Toast.LENGTH_LONG).show();
                 }
             });
         }

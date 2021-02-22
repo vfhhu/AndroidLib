@@ -9,40 +9,39 @@ import android.widget.Toast;
  */
 
 public class MToast {
-    private static Toast _toast;
-    public static Toast getToast() {
-        return _toast;
-    }
-    public static Toast setToast(Toast _toast) {
-        MToast._toast = _toast;
-        return MToast._toast;
+    public static void showoast(final Activity act,final Toast _toast) {
+        if(Looper.myLooper() == Looper.getMainLooper()) {
+            _toast.show();
+        }else{
+            act.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    _toast.show();
+                }
+            });
+        }
     }
     public static void show(final Activity act, final CharSequence text,final int duration){
         if(Looper.getMainLooper().getThread() == Thread.currentThread()){
-            if(_toast==null)Toast.makeText(act,text, duration).show();
-            else _toast.show();
+            Toast.makeText(act,text, duration).show();
             return;
         }
         act.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(_toast==null)Toast.makeText(act,text, duration).show();
-                else _toast.show();
-
+                Toast.makeText(act,text, duration).show();
             }
         });
     }
     public static void show(final Activity act, final int resId, final int duration){
         if(Looper.getMainLooper().getThread() == Thread.currentThread()){
-            if(_toast==null)Toast.makeText(act,resId, duration).show();
-            else _toast.show();
+            Toast.makeText(act,resId, duration).show();
             return;
         }
         act.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(_toast==null)Toast.makeText(act,resId, duration).show();
-                else _toast.show();
+                Toast.makeText(act,resId, duration).show();
             }
         });
     }
