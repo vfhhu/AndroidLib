@@ -3,9 +3,14 @@ package xyz.vfhhu.lib.android.utils;
 import android.os.Build;
 
 import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 import java.util.zip.CRC32;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Created by leo3x on 2018/6/21.
@@ -59,6 +64,45 @@ public class HashUtil {
         //使用硬件信息拼凑出来的15位号码
         return new UUID(m_szDevIDShort.hashCode(), serial.hashCode()).toString().toUpperCase();
 
+    }
+    public static String getMD5(String str) {
+        try
+        {
+            // Create MD5 Hash
+            MessageDigest md5 = java.security.MessageDigest.getInstance("MD5");
+            md5.update(str.getBytes());
+            byte messageDigest[] = md5.digest();
+
+            String resultArray = byte2hex(messageDigest,"",true);
+
+            return resultArray;
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String HmacSHA256(String key,String msg){
+        try {
+            byte[] keyBytes = key.getBytes("UTF-8"); // 把密鑰字串轉為byte[]
+            Key hmacKey = new SecretKeySpec(keyBytes, "HmacSHA256"); // 建立HMAC加密用密鑰
+            Mac hmacSHA256 = Mac.getInstance("HmacSHA256"); // 取得SHA256 HMAC的Mac實例
+            hmacSHA256.init(hmacKey); // 使用密鑰對Mac進行初始化
+            byte [] macData = hmacSHA256.doFinal(msg.getBytes("UTF-8")); // 對原始訊息進行雜湊計算
+            String hexStringOfTheOriginMessage = byte2hex(macData,"",true); //  使用Apache Commons Codec的Hex把雜湊計算的結果轉為Hex字串
+            return hexStringOfTheOriginMessage;
+
+//            System.out.println(hexStringOfTheOriginMessage); // 388b02bb9be6c19490d4014aaaccb62a3969f44f3ecef3b2218e7ee1d457188d
+//
+//            System.out.println(hmacSHA256.getAlgorithm()); // HmacSHA256
+//            System.out.println(hmacSHA256.getMacLength()); // 32
+//            System.out.println(hmacSHA256.getProvider().getName()); // SunJCE (JCE提供者)
+        } catch (Exception e) {
+            // 例外處理
+        }
+        return "";
     }
     public static String byte2hex(byte[] b,String split,boolean isUpperCase){ //二行制转字符串
         String hs="";

@@ -45,8 +45,10 @@ public class HttpUtils {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     public static final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
     public static final String TAG="HttpUtils";
+
+
     private static OkHttpClient client ;
-    private static OkHttpClient client_https ;
+//    private static OkHttpClient client_https ;
     private static HashMap<String,String> setHeader;
     private static HashMap <String,String> addHeader;
     private static  HttpUtils inst;
@@ -63,8 +65,13 @@ public class HttpUtils {
 
 //        mBuilder.sslSocketFactory(createSSLSocketFactory(), mMyTrustManager)
 //                .hostnameVerifier(new TrustAllHostnameVerifier());
-        client_https=mBuilder.build();
+//        client_https=mBuilder.build();
     }
+    public static void initClient(OkHttpClient client) {
+        if(inst==null)init();
+        HttpUtils.client = client;
+    }
+
     public static HttpUtils init(){
         if(inst!=null)return inst;
         return new HttpUtils();
@@ -89,10 +96,10 @@ public class HttpUtils {
         b.readTimeout(sec, TimeUnit.SECONDS);    // socket timeout
         client=b.build();
 
-        OkHttpClient.Builder bssl=client_https.newBuilder();
-        bssl.connectTimeout(sec, TimeUnit.SECONDS); // connect timeout
-        bssl.readTimeout(sec, TimeUnit.SECONDS);    // socket timeout
-        client_https=bssl.build();
+//        OkHttpClient.Builder bssl=client_https.newBuilder();
+//        bssl.connectTimeout(sec, TimeUnit.SECONDS); // connect timeout
+//        bssl.readTimeout(sec, TimeUnit.SECONDS);    // socket timeout
+//        client_https=bssl.build();
     }
     public static void setHeader(HashMap<String,String> map){setHeader=map;}
     public static void addHeader(HashMap<String,String> map){addHeader=map;}
@@ -116,11 +123,12 @@ public class HttpUtils {
         Request.Builder b=new Request.Builder().url(url);
         buildHeader(b);
         Request request = b.build();
-        OkHttpClient _client=client;
-        if(url.toLowerCase().startsWith("https")){
-            _client=client_https;
-        }
-        Response response = _client.newCall(request).execute();
+//        OkHttpClient _client=client;
+//        if(url.toLowerCase().startsWith("https")){
+//            _client=client_https;
+//        }
+//        Response response = _client.newCall(request).execute();
+        Response response = client.newCall(request).execute();
 //        if(isCookie)setCookie(response);
         return response.body().string();
     }
@@ -129,11 +137,12 @@ public class HttpUtils {
         Request.Builder b=new Request.Builder().url(url);
         buildHeader(b);
         Request request = b.build();
-        OkHttpClient _client=client;
-        if(url.toLowerCase().startsWith("https")){
-            _client=client_https;
-        }
-        Response response = _client.newCall(request).execute();
+//        OkHttpClient _client=client;
+//        if(url.toLowerCase().startsWith("https")){
+//            _client=client_https;
+//        }
+//        Response response = _client.newCall(request).execute();
+        Response response = client.newCall(request).execute();
 //        if(isCookie)setCookie(response);
         return response;
     }
@@ -143,11 +152,12 @@ public class HttpUtils {
         buildHeader(b);
         Request request = b.build();
         try{
-            OkHttpClient _client=client;
-            if(url.toLowerCase().startsWith("https")){
-                _client=client_https;
-            }
-            _client.newCall(request).enqueue(callBcak);
+//            OkHttpClient _client=client;
+//            if(url.toLowerCase().startsWith("https")){
+//                _client=client_https;
+//            }
+//            _client.newCall(request).enqueue(callBcak);
+            client.newCall(request).enqueue(callBcak);
         }catch (Exception e){}
 
 //        return response.body().string();
@@ -161,11 +171,12 @@ public class HttpUtils {
         buildHeader(b);
         Request request = b.post(requestBody).build();
 
-        OkHttpClient _client=client;
-        if(url.toLowerCase().startsWith("https")){
-            _client=client_https;
-        }
-        Response response = _client.newCall(request).execute();
+//        OkHttpClient _client=client;
+//        if(url.toLowerCase().startsWith("https")){
+//            _client=client_https;
+//        }
+//        Response response = _client.newCall(request).execute();
+        Response response = client.newCall(request).execute();
 //        if(isCookie)setCookie(response);
         return response.body().string();
     }
@@ -177,11 +188,12 @@ public class HttpUtils {
         buildHeader(b);
         Request request = b.post(requestBody).build();
 
-        OkHttpClient _client=client;
-        if(url.toLowerCase().startsWith("https")){
-            _client=client_https;
-        }
-        Response response = _client.newCall(request).execute();
+//        OkHttpClient _client=client;
+//        if(url.toLowerCase().startsWith("https")){
+//            _client=client_https;
+//        }
+//        Response response = _client.newCall(request).execute();
+        Response response = client.newCall(request).execute();
 //        if(isCookie)setCookie(response);
         return response;
     }
@@ -194,11 +206,12 @@ public class HttpUtils {
         Request request = b.post(requestBody).build();
 
         try{
-            OkHttpClient _client=client;
-            if(url.toLowerCase().startsWith("https")){
-                _client=client_https;
-            }
-            _client.newCall(request).enqueue(callBcak);
+//            OkHttpClient _client=client;
+//            if(url.toLowerCase().startsWith("https")){
+//                _client=client_https;
+//            }
+//            _client.newCall(request).enqueue(callBcak);
+            client.newCall(request).enqueue(callBcak);
         }catch (Exception e){}
 
     }
@@ -214,11 +227,12 @@ public class HttpUtils {
         buildHeader(b);
         Request request = b.post(requestBody).build();
 
-        OkHttpClient _client=client;
-        if(url.toLowerCase().startsWith("https")){
-            _client=client_https;
-        }
-        Response response = _client.newCall(request).execute();
+//        OkHttpClient _client=client;
+//        if(url.toLowerCase().startsWith("https")){
+//            _client=client_https;
+//        }
+//        Response response = _client.newCall(request).execute();
+        Response response = client.newCall(request).execute();
 //        if(isCookie)setCookie(response);
         return response.body().string();
     }
@@ -234,11 +248,12 @@ public class HttpUtils {
         buildHeader(b);
         Request request = b.post(requestBody).build();
 
-        OkHttpClient _client=client;
-        if(url.toLowerCase().startsWith("https")){
-            _client=client_https;
-        }
-        Response response = _client.newCall(request).execute();
+//        OkHttpClient _client=client;
+//        if(url.toLowerCase().startsWith("https")){
+//            _client=client_https;
+//        }
+//        Response response = _client.newCall(request).execute();
+        Response response = client.newCall(request).execute();
 //        if(isCookie)setCookie(response);
         return response;
     }
@@ -255,11 +270,12 @@ public class HttpUtils {
         Request request = b.post(requestBody).build();
 
         try{
-            OkHttpClient _client=client;
-            if(url.toLowerCase().startsWith("https")){
-                _client=client_https;
-            }
-            _client.newCall(request).enqueue(callBcak);
+//            OkHttpClient _client=client;
+//            if(url.toLowerCase().startsWith("https")){
+//                _client=client_https;
+//            }
+//            _client.newCall(request).enqueue(callBcak);
+            client.newCall(request).enqueue(callBcak);
         }catch (Exception e){}
     }
 
@@ -280,11 +296,12 @@ public class HttpUtils {
         Request request = b.post(requestBody).build();
 
         try{
-            OkHttpClient _client=client;
-            if(url.toLowerCase().startsWith("https")){
-                _client=client_https;
-            }
-            _client.newCall(request).enqueue(callBcak);
+//            OkHttpClient _client=client;
+//            if(url.toLowerCase().startsWith("https")){
+//                _client=client_https;
+//            }
+//            _client.newCall(request).enqueue(callBcak);
+            client.newCall(request).enqueue(callBcak);
         }catch (Exception e){}
 
     }

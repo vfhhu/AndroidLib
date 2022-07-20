@@ -33,6 +33,7 @@ public class SocketClient implements Runnable {
     private OutputStreamWriter wt;
     private BufferedWriter out;
     private OnSocketClientListener listener;
+    private long sendTime=0;
 
 
 
@@ -104,6 +105,7 @@ public class SocketClient implements Runnable {
                 out.write(s + end);
                 out.flush();
                 if(listener!=null)listener.onSend(s,this);
+                sendTime=System.currentTimeMillis();
             }else{
             }
             return true;
@@ -129,6 +131,7 @@ public class SocketClient implements Runnable {
                 outputstream.write(s);
                 outputstream.flush();
                 if(listener!=null)listener.onSend(s,this);
+                sendTime=System.currentTimeMillis();
             }else{
             }
             return true;
@@ -203,5 +206,8 @@ public class SocketClient implements Runnable {
 
     public void setEndChar(String endChar) {
         this.endChar = endChar;
+    }
+    public long getSendTime() {
+        return sendTime;
     }
 }
