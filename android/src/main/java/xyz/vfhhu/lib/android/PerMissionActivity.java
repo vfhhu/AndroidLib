@@ -56,7 +56,7 @@ public class PerMissionActivity extends AppCompatActivity {
             android.Manifest.permission.WRITE_CALL_LOG,
             android.Manifest.permission.ADD_VOICEMAIL,
             android.Manifest.permission.USE_SIP,
-            android.Manifest.permission.PROCESS_OUTGOING_CALLS,
+//            android.Manifest.permission.PROCESS_OUTGOING_CALLS,
             android.Manifest.permission.BODY_SENSORS,
             android.Manifest.permission.SEND_SMS,
             android.Manifest.permission.RECEIVE_SMS,

@@ -3,6 +3,7 @@ package xyz.vfhhu.lib.android.utils;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 
 /**
  * Created by leo3x on 2018/11/29.
@@ -20,7 +21,11 @@ public class ContextUtil {
         String versionCode="";
         try {
             packageInfo=packageManager.getPackageInfo(context.getPackageName(),0);
-            versionCode=packageInfo.versionCode+"";
+//            versionCode=packageInfo.versionCode+"";
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                versionCode=packageInfo.getLongVersionCode()+"";
+            }else versionCode=packageInfo.versionCode+"";
+
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

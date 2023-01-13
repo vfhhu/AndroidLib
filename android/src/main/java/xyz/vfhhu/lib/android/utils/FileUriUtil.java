@@ -45,7 +45,8 @@ public class FileUriUtil {
                     final String[] split = docId.split(":");
                     final String type = split[0];
                     if ("primary".equalsIgnoreCase(type)) {
-                        path = Environment.getExternalStorageDirectory() + "/" + split[1];
+//                        path = Environment.getExternalStorageDirectory() + "/" + split[1];
+                        path = context.getExternalFilesDir(null).getAbsolutePath() + "/" + split[1];
                         return path;
                     }
                 } else if (isDownloadsDocument(uri)) {

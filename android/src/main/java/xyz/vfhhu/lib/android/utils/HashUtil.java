@@ -19,10 +19,14 @@ import javax.crypto.spec.SecretKeySpec;
 public class HashUtil {
     public static String getUniquePsuedoID() {
         String serial = null;
+        int ab1_length=0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ab1_length=Build.SUPPORTED_ABIS.length;
+        }else ab1_length=Build.CPU_ABI.length();
 
         String m_szDevIDShort = "35" +
                 Build.BOARD.length() % 10 + Build.BRAND.length() % 10 +
-                Build.CPU_ABI.length() % 10 + Build.DEVICE.length() % 10 +
+                ab1_length % 10 + Build.DEVICE.length() % 10 +
                 Build.DISPLAY.length() % 10 + Build.HOST.length() % 10 +
                 Build.ID.length() % 10 + Build.MANUFACTURER.length() % 10 +
                 Build.MODEL.length() % 10 + Build.PRODUCT.length() % 10 +
