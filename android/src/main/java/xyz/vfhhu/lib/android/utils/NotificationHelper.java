@@ -13,17 +13,20 @@ import androidx.annotation.RequiresApi;
 public class NotificationHelper extends ContextWrapper {
     private NotificationManager manager;
     public static final String DEFAULT_CHANNEL = "default";
-
+    NotificationChannel chanDefault=null;
 
     public NotificationHelper(Context base) {
         super(base);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationChannel chan1 = new NotificationChannel(DEFAULT_CHANNEL,
+            chanDefault = new NotificationChannel(DEFAULT_CHANNEL,
                     DEFAULT_CHANNEL, NotificationManager.IMPORTANCE_DEFAULT);
-            chan1.setLightColor(Color.GREEN);
-            chan1.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-            getManager().createNotificationChannel(chan1);
+            chanDefault.setLightColor(Color.GREEN);
+            chanDefault.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+            getManager().createNotificationChannel(chanDefault);
         }
+    }
+    public NotificationChannel getChanDefault(){
+        return chanDefault;
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void addChannel(NotificationChannel chan1){
