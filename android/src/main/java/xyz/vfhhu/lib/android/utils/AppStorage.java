@@ -3,6 +3,10 @@ package xyz.vfhhu.lib.android.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by leo3x on 2018/11/26.
  */
@@ -11,6 +15,32 @@ public class AppStorage {
     private static String getSpKey(Context ct){
 //        return ct.getPackageName()+"_"+ BuildConfig.APPLICATION_ID;
         return ct.getPackageName()+"_libvf";
+    }
+    public static JSONArray getSaveJSONArray(Context ct, String tag, JSONArray defultV){
+        tag=tag+"_JSONArray";
+        try {
+            return new JSONArray(getSaveString( ct,  tag, "{}"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return defultV;
+    }
+    public static void setSaveJSONArray(Context ct, String tag, JSONArray j){
+        tag=tag+"_JSONArray";
+        setSaveString(ct, tag, j.toString());
+    }
+    public static JSONObject getSaveJSONObject(Context ct, String tag, JSONObject defultV){
+        tag=tag+"_JSONObject";
+        try {
+            return new JSONObject(getSaveString( ct,  tag, "{}"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return defultV;
+    }
+    public static void setSaveJSONObject(Context ct, String tag, JSONObject j){
+        tag=tag+"_JSONObject";
+        setSaveString(ct, tag, j.toString());
     }
 
     public static void setSaveString(Context ct, String tag, String data){
